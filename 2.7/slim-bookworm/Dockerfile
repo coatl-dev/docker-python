@@ -42,7 +42,7 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN set -eux; \
 	\
 	savedAptMark="$(apt-mark showmanual)"; \
-	apt-get update; \
+	apt-get update --quiet; \
 	apt-get install --yes --no-install-recommends \
 		dpkg-dev \
 		gcc \
@@ -155,7 +155,7 @@ ENV PYTHON_GET_PIP_SHA256=40ee07eac6674b8d60fce2bbabc148cf0e2f1408c167683f110fd6
 RUN set -ex; \
 	\
 	savedAptMark="$(apt-mark showmanual)"; \
-	apt-get update; \
+	apt-get update --quiet; \
 	apt-get install --yes --no-install-recommends wget; \
 	\
 	wget -q -O get-pip.py "$PYTHON_GET_PIP_URL"; \
