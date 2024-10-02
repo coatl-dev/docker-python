@@ -48,18 +48,20 @@ jobs:
           - version: '3.12'
             variant: bookworm
             tags: |
-              type=raw,value=${{ needs.tagger.outputs.major }}
-              type=raw,value=${{ needs.tagger.outputs.major_minor }}
-              type=raw,value=${{ needs.tagger.outputs.version }}
+              ${{ needs.tagger.outputs.major }}
+              ${{ needs.tagger.outputs.major_minor }}
+              ${{ needs.tagger.outputs.version }}
           - version: '3.12'
             variant: slim-bookworm
             tags: |
-              type=raw,value=${{ needs.tagger.outputs.major }}-slim
-              type=raw,value=${{ needs.tagger.outputs.major_minor }}-slim
-              type=raw,value=${{ needs.tagger.outputs.version }}-slim
+              ${{ needs.tagger.outputs.major }}-slim
+              ${{ needs.tagger.outputs.major_minor }}-slim
+              ${{ needs.tagger.outputs.version }}-slim
     with:
+      image: coatldev/python
       version: ${{ matrix.image.version }}
       variant: ${{ matrix.image.variant }}
       tags: ${{ matrix.image.tags }}
+      username: ${{ vars.DOCKERHUB_USERNAME }}
     secrets:
       password: ${{ secrets.DOCKERHUB_TOKEN }}

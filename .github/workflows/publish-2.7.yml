@@ -29,8 +29,10 @@ jobs:
               2.7-slim
               2.7.18-slim
     with:
+      image: coatldev/python
       version: ${{ matrix.image.version }}
       variant: ${{ matrix.image.variant }}
       tags: ${{ matrix.image.tags }}
+      username: ${{ vars.DOCKERHUB_USERNAME }}
     secrets:
       password: ${{ secrets.DOCKERHUB_TOKEN }}
