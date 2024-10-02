@@ -1,6 +1,11 @@
 on:
   workflow_call:
     inputs:
+      image:
+        description: >-
+          Docker image to use as base name for tags.
+        required: true
+        type: string
       version:
         description: >-
           Python version to release.
@@ -16,18 +21,25 @@ on:
           List of tags as key-value pair attributes.
         required: false
         type: string
+      username:
+        description: >-
+          Username for authenticating to the Docker registry.
+        required: true
+        type: string
     secrets:
       password:
+        description: >-
+          Password or personal access token for authenticating the Docker registry.
         required: true
 
 jobs:
   publish:
     uses: coatl-dev/workflows/.github/workflows/docker-build-push-multi-platform.yml@v4
     with:
-      registry-image: coatldev/python
+      registry-image: ${{ inputs.image }}
       metadata-tags: |
         ${{ inputs.tags }}
-      registry-username: ${{ vars.DOCKERHUB_USERNAME }}
+      registry-username: ${{ inputs.username }}
       build-file: ${{ inputs.version }}/${{ inputs.variant }}/Dockerfile
       build-cache-key: ${{ inputs.version }}-${{ inputs.variant }}
       build-digest-key: ${{ inputs.version }}-${{ inputs.variant }}
