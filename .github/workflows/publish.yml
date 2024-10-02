@@ -16,6 +16,9 @@ on:
           List of tags as key-value pair attributes.
         required: false
         type: string
+    secrets:
+      password:
+        required: true
 
 jobs:
   publish:
@@ -29,4 +32,4 @@ jobs:
       build-cache-key: ${{ inputs.version }}-${{ inputs.variant }}
       build-digest-key: ${{ inputs.version }}-${{ inputs.variant }}
     secrets:
-      registry-password: ${{ secrets.DOCKERHUB_TOKEN }}
+      registry-password: ${{ secrets.password }}
