@@ -1,11 +1,14 @@
 # coatl.dev Python Docker images
 
 [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/coatl-dev/docker-python/coatl.svg)](https://results.pre-commit.ci/latest/github/coatl-dev/docker-python/coatl)
+![Docker Pulls](https://img.shields.io/docker/pulls/coatldev/python)
 
 ## Supported tags and respective `Dockerfile` links
 
-- [`2`, `2.7`, `2.7-bookworm`, `2.7.18`, `2.7.18-bookworm`]
-- [`2-slim`, `2.7-slim`, `2.7-slim-bookworm`, `2.7.18-slim`, `2.7.18-slim-bookworm`]
+- [`2`, `2.7`, `2.7.18`]
+- [`2-slim`, `2.7-slim`, `2.7.18-slim`]
+- [`3`, `3.12`, `3.12.7`]
+- [`3-slim`, `3.12-slim`, `3.12.7-slim`]
 
 ## Supported architectures
 
@@ -36,8 +39,24 @@ complete `Dockerfile`. In such cases, you can run a Python script by using the
 Python Docker image directly:
 
 ```sh
+docker run -it --rm --name my-running-script -v "$PWD":/usr/src/myapp -w /usr/src/myapp python:3 python your-daemon-or-script.py
+```
+
+or (again, if you need to use Python 2):
+
+```sh
 docker run -it --rm --name my-running-script -v "$PWD":/usr/src/myapp -w /usr/src/myapp coatldev/python:2 python your-daemon-or-script.py
 ```
+
+### Multiple Python versions in the image
+
+In the non-slim variants there will be an additional (distro-provided) `python`
+executable at `/usr/bin/python` (and/or `/usr/bin/python3`) while the desired
+image-provided `/usr/local/bin/python` is the default choice in the `$PATH`.
+This is an unfortunate side-effect of using the `buildpack-deps` image in the
+non-slim variants (and many distribution-provided tools being written against
+and likely to break with a different Python installation, so we can't safely
+remove/overwrite it).
 
 ## Image Variants
 
@@ -48,15 +67,7 @@ The python images come in many flavors, each designed for a specific use case.
 This is the defacto image. If you are unsure about what your needs are, you
 probably want to use this one. It is designed to be used both as a throw away
 container (mount your source code and start the container to start your app), as
-well as the base to build other images off of.
-
-Some of these tags may have names like bookworm or bullseye in them. These are
-the suite code names for releases of Debian⁠
-
-and indicate which release the image is based on. If your image needs to install
-any additional packages beyond what comes with the image, you'll likely want to
-specify one of these explicitly to minimize breakage when there are new releases
-of Debian.
+well as the base to build other images.
 
 This tag is based off of `buildpack-deps`. `buildpack-deps` is designed for the
 average user of Docker who has many images on their system. It, by design, has a
@@ -68,7 +79,7 @@ overall size of all images on your system.
 
 This image does not contain the common Debian packages contained in the default
 tag and only contains the minimal Debian packages needed to run `python`. Unless
-you are working in an environment where only the `python` image will be deployed
+you are working in an environment where _only_ the `python` image will be deployed
 and you have space constraints, we highly recommend using the default image of
 this repository.
 
@@ -86,5 +97,7 @@ compile extension modules written in other languages. Possible solutions if a
   should be successful without additional header/development Debian packages.
 
 <!-- Links -->
-[`2`, `2.7`, `2.7-bookworm`, `2.7.18`, `2.7.18-bookworm`]: https://github.com/coatl-dev/docker-python/blob/coatl/2.7/bookworm/Dockerfile
-[`2-slim`, `2.7-slim`, `2.7-slim-bookworm`, `2.7.18-slim`, `2.7.18-slim-bookworm`]: https://github.com/coatl-dev/docker-python/blob/coatl/2.7/slim-bookworm/Dockerfile
+[`2`, `2.7`, `2.7.18`]: https://github.com/coatl-dev/docker-python/blob/coatl/2.7/bookworm/Dockerfile
+[`2-slim`, `2.7-slim`, `2.7.18-slim`]: https://github.com/coatl-dev/docker-python/blob/coatl/2.7/slim-bookworm/Dockerfile
+[`3`, `3.12`, `3.12.7`]: https://github.com/coatl-dev/docker-python/blob/coatl/3.12/bookworm/Dockerfile
+[`3-slim`, `3.12-slim`, `3.12.7-slim`]: https://github.com/coatl-dev/docker-python/blob/coatl/3.12/slim-bookworm/Dockerfile

@@ -35,7 +35,6 @@ ENV PYTHON_VERSION=2.7.18
 ENV PYTHON_TAR_SHA256=b62c0e7937551d0cc02b8fd5cb0f544f9405bafc9a54d3808ed4594812edef43
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
-# hadolint ignore=DL3003
 RUN set -eux; \
 	\
 	wget -q -O python.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz"; \
