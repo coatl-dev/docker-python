@@ -1,0 +1,63 @@
+name: publish
+
+on:
+  push:
+      branches:
+      - 'coatl'
+      paths:
+      - '.github/workflows/publish-3.12.yml'
+      - '3.12/**'
+  schedule:
+      - cron: '0 20 14,28 * *'
+
+jobs:
+  tagger:
+    runs-on: ubuntu-latest
+    outputs:
+      major: ${{ steps.tags.outputs.major }}
+      major_minor: ${{ steps.tags.outputs.major_minor }}
+      version: ${{ steps.tags.outputs.version }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Extract version number
+        id: tags
+        run: |
+          # Extract the Python version from the Dockerfile
+          VERSION=$(grep 'ENV PYTHON_VERSION' 3.12/bookworm/Dockerfile | cut -d '=' -f 2)
+          echo "VERSION=${VERSION}"
+          # Trim the version to the first two segments (major.minor)
+          MAJOR_MINOR=$(echo $VERSION | cut -d'.' -f1-2)
+          echo "MAJOR_MINOR=${MAJOR_MINOR}"
+          # Trim the version to the first segment (major)
+          MAJOR=$(echo $VERSION | cut -d'.' -f1-1)
+          echo "MAJOR=${MAJOR}"
+          # Export the extracted version to GITHUB_OUTPUT
+          echo "major=${MAJOR}" >> $GITHUB_OUTPUT
+          echo "major_minor=${MAJOR_MINOR}" >> $GITHUB_OUTPUT
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+
+  publish:
+    needs: tagger
+    uses: ./.github/workflows/publish.yml
+    strategy:
+      matrix:
+        image:
+          - version: '3.12'
+            variant: bookworm
+            tags: |
+              type=raw,value=${{ needs.tagger.outputs.major }}
+              type=raw,value=${{ needs.tagger.outputs.major_minor }}
+              type=raw,value=${{ needs.tagger.outputs.version }}
+          - version: '3.12'
+            variant: slim-bookworm
+            tags: |
+              type=raw,value=${{ needs.tagger.outputs.major }}-slim
+              type=raw,value=${{ needs.tagger.outputs.major_minor }}-slim
+              type=raw,value=${{ needs.tagger.outputs.version }}-slim
+    with:
+      version: ${{ matrix.image.version }}
+      variant: ${{ matrix.image.variant }}
+      tags: ${{ matrix.image.tags }}

@@ -1,44 +1,32 @@
-name: publish
-
 on:
-  push:
-      branches:
-      - 'coatl'
-      paths:
-      - '.github/workflows/publish-2.7.yml'
-      - '2.7/**'
-  schedule:
-      - cron: '0 8 14,28 * *'
+  workflow_call:
+    inputs:
+      version:
+        description: >-
+          Python version to release.
+        required: true
+        type: string
+      variant:
+        description: >-
+          Image variant.
+        required: true
+        type: string
+      tags:
+        description: >-
+          List of tags as key-value pair attributes.
+        required: false
+        type: string
 
 jobs:
   publish:
     uses: coatl-dev/workflows/.github/workflows/docker-build-push-multi-platform.yml@v4
-    strategy:
-      matrix:
-        image:
-          - version: '2.7'
-            variant: bookworm
-            tags: |
-              2
-              2.7
-              2.7-bookworm
-              2.7.18
-              2.7.18-bookworm
-          - version: '2.7'
-            variant: slim-bookworm
-            tags: |
-              2-slim
-              2.7-slim
-              2.7-slim-bookworm
-              2.7.18-slim
-              2.7.18-slim-bookworm
     with:
       registry-image: coatldev/python
       metadata-tags: |
-        ${{ matrix.image.tags }}
+        ${{ inputs.tags }}
       registry-username: ${{ vars.DOCKERHUB_USERNAME }}
-      build-file: ${{ matrix.image.version }}/${{ matrix.image.variant }}/Dockerfile
-      build-cache-key: ${{ matrix.image.version }}-${{ matrix.image.variant }}
-      build-digest-key: ${{ matrix.image.version }}-${{ matrix.image.variant }}
+      build-file: ${{ inputs.version }}/${{ inputs.variant }}/Dockerfile
+      build-cache-key: ${{ inputs.version }}-${{ inputs.variant }}
+      build-digest-key: ${{ inputs.version }}-${{ inputs.variant }}
     secrets:
       registry-password: ${{ secrets.DOCKERHUB_TOKEN }}

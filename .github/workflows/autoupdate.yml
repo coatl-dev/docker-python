@@ -1,0 +1,49 @@
+name: auto-update
+
+on:
+  schedule:
+    - cron: '0 18 10 2-12/2 *'
+  workflow_dispatch:
+
+jobs:
+  auto-update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Fetch latest Python 3.12 release
+        run: |
+          python_version=$(curl -s https://www.python.org/ftp/python/ | grep -oP '3\.12\.\d+/' | uniq | sort -V | tail -n 1 | tr -d '/')
+
+          echo "python3.12: $python_version"
+
+          sed -i "s/ENV PYTHON_VERSION=.*/ENV PYTHON_VERSION=$python_version/" 3.12/bookworm/Dockerfile
+          sed -i "s/ENV PYTHON_VERSION=.*/ENV PYTHON_VERSION=$python_version/" 3.12/slim-bookworm/Dockerfile
+          sed -i "s/3\.12\.[0-9]\+\([-a-z]*\)/$python_version\1/g" README.md
+
+      - name: Detect changes
+        id: git-diff
+        uses: coatl-dev/actions/simple-git-diff@v3
+
+      - name: Import GPG key
+        if: ${{ steps.git-diff.outputs.diff == 'true' }}
+        id: gpg-import
+        uses: coatl-dev/actions/gpg-import@v3
+        with:
+          passphrase: ${{ secrets.COATL_BOT_GPG_PASSPHRASE }}
+          private-key: ${{ secrets.COATL_BOT_GPG_PRIVATE_KEY }}
+
+      - name: Commit and push changes
+        if: ${{ steps.git-diff.outputs.diff == 'true' }}
+        run: |
+          git checkout -B coatl-dev-autoupdate
+          git add -u
+          git commit -m 'feat: update toolset'
+          git push --force --set-upstream origin coatl-dev-autoupdate
+
+      - name: Create Pull Request
+        if: ${{ steps.git-diff.outputs.diff == 'true' }}
+        uses: coatl-dev/actions/pr-create@v3
+        with:
+          gh-token: ${{ secrets.COATL_BOT_GH_TOKEN }}

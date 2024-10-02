@@ -38,7 +38,6 @@ ENV PYTHON_VERSION=2.7.18
 ENV PYTHON_TAR_SHA256=b62c0e7937551d0cc02b8fd5cb0f544f9405bafc9a54d3808ed4594812edef43
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
-# hadolint ignore=DL3003,SC2086
 RUN set -eux; \
 	\
 	savedAptMark="$(apt-mark showmanual)"; \
@@ -151,7 +150,6 @@ ENV PYTHON_WHEEL_VERSION=0.37.1
 ENV PYTHON_GET_PIP_URL=https://raw.githubusercontent.com/pypa/get-pip/HEAD/public/2.7/get-pip.py
 ENV PYTHON_GET_PIP_SHA256=40ee07eac6674b8d60fce2bbabc148cf0e2f1408c167683f110fd608b8d6f416
 
-# hadolint ignore=SC2086
 RUN set -ex; \
 	\
 	savedAptMark="$(apt-mark showmanual)"; \
