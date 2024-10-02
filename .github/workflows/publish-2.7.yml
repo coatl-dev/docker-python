@@ -1,4 +1,4 @@
-name: publish
+name: publish-2.7
 
 on:
   push:
@@ -32,3 +32,5 @@ jobs:
       version: ${{ matrix.image.version }}
       variant: ${{ matrix.image.variant }}
       tags: ${{ matrix.image.tags }}
+    secrets:
+      password: ${{ secrets.DOCKERHUB_TOKEN }}
