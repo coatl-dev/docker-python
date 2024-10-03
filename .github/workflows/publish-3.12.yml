@@ -2,13 +2,13 @@ name: publish-3.12
 
 on:
   push:
-      branches:
+    branches:
       - 'coatl'
-      paths:
+    paths:
       - '.github/workflows/publish-3.12.yml'
       - '3.12/**'
   schedule:
-      - cron: '0 20 14,28 * *'
+    - cron: '0 20 14,28 * *'
 
 jobs:
   tagger:

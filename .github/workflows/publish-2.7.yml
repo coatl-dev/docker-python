@@ -2,13 +2,13 @@ name: publish-2.7
 
 on:
   push:
-      branches:
+    branches:
       - 'coatl'
-      paths:
+    paths:
       - '.github/workflows/publish-2.7.yml'
       - '2.7/**'
   schedule:
-      - cron: '0 8 28 * *'
+    - cron: '0 8 28 * *'
 
 jobs:
   publish:
