@@ -25,7 +25,7 @@ FROM coatldev/python:3
 WORKDIR /usr/src/app
 
 COPY requirements.txt ./
-RUN pip install --no-cache-dir -r requirements.txt
+RUN python -m pip install -r requirements.txt
 
 COPY . .
 
@@ -40,7 +40,7 @@ FROM coatldev/python:2
 WORKDIR /usr/src/app
 
 COPY requirements.txt ./
-RUN pip install --no-cache-dir -r requirements.txt
+RUN python -m pip install -r requirements.txt
 
 COPY . .
 
