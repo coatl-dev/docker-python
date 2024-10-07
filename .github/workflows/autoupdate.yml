@@ -22,6 +22,16 @@ jobs:
           sed -i "s/ENV PYTHON_VERSION=.*/ENV PYTHON_VERSION=$python_version/" 3.12/slim-bookworm/Dockerfile
           sed -i "s/3\.12\.[0-9]\+\([-a-z]*\)/$python_version\1/g" README.md
 
+      - name: Fetch latest Python 3.13 release
+        run: |
+          python_version=$(curl -s https://www.python.org/ftp/python/ | grep -oP '3\.13\.\d+/' | uniq | sort -V | tail -n 1 | tr -d '/')
+
+          echo "python3.13: $python_version"
+
+          sed -i "s/ENV PYTHON_VERSION=.*/ENV PYTHON_VERSION=$python_version/" 3.13/bookworm/Dockerfile
+          sed -i "s/ENV PYTHON_VERSION=.*/ENV PYTHON_VERSION=$python_version/" 3.13/slim-bookworm/Dockerfile
+          sed -i "s/3\.13\.[0-9]\+\([-a-z]*\)/$python_version\1/g" README.md
+
       - name: Detect changes
         id: git-diff
         uses: coatl-dev/actions/simple-git-diff@v3

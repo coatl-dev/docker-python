@@ -142,10 +142,6 @@ RUN set -eux; \
 	\
 	python2 --version
 
-# if this is called "PIP_VERSION", pip explodes with "ValueError: invalid truth value '<VERSION>'"
-ENV PYTHON_PIP_VERSION=20.3.4
-ENV PYTHON_SETUPTOOLS_VERSION=44.1.1
-ENV PYTHON_WHEEL_VERSION=0.37.1
 # https://github.com/pypa/get-pip
 ENV PYTHON_GET_PIP_URL=https://raw.githubusercontent.com/pypa/get-pip/HEAD/public/2.7/get-pip.py
 ENV PYTHON_GET_PIP_SHA256=40ee07eac6674b8d60fce2bbabc148cf0e2f1408c167683f110fd608b8d6f416
@@ -166,8 +162,6 @@ RUN set -ex; \
 	\
 	python get-pip.py \
 		--disable-pip-version-check \
-		--no-cache-dir \
-		"pip==$PYTHON_PIP_VERSION" \
 	; \
 	pip --version; \
 	\
