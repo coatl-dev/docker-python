@@ -26,7 +26,7 @@ RUN set -eux; \
     \
     apt-get update --quiet; \
     apt-get upgrade --yes; \
-	apt-get install --yes --no-install-recommends \
+	apt-get install -y --no-install-recommends \
 		tk-dev \
 	; \
 	rm -rf /var/lib/apt/lists/*
@@ -52,7 +52,7 @@ RUN set -eux; \
 		--enable-shared \
         --enable-unicode=ucs4 \
 	; \
-    make -s -j "$(nproc)" \
+    make -j "$(nproc)" \
 # setting PROFILE_TASK makes "--enable-optimizations" reasonable: https://bugs.python.org/issue36044 / https://github.com/docker-library/python/issues/160#issuecomment-509426916
         PROFILE_TASK='-m test.regrtest --pgo \
             test_array \

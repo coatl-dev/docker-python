@@ -48,12 +48,12 @@ RUN set -eux; \
 		--enable-shared \
 		--with-lto \
 		--with-system-expat \
-		--with-ensurepip \
+		--without-ensurepip \
 	; \
 	nproc="$(nproc)"; \
 	EXTRA_CFLAGS="$(dpkg-buildflags --get CFLAGS)"; \
 	LDFLAGS="$(dpkg-buildflags --get LDFLAGS)"; \
-	make -s -j "$nproc" \
+	make -j "$nproc" \
 		"EXTRA_CFLAGS=${EXTRA_CFLAGS:-}" \
 		"LDFLAGS=${LDFLAGS:-}" \
 		"PROFILE_TASK=${PROFILE_TASK:-}" \
@@ -61,7 +61,7 @@ RUN set -eux; \
 # https://github.com/docker-library/python/issues/784
 # prevent accidental usage of a system installed libpython of the same version
 	rm python; \
-	make -s -j "$nproc" \
+	make -j "$nproc" \
 		"EXTRA_CFLAGS=${EXTRA_CFLAGS:-}" \
 		"LDFLAGS=${LDFLAGS:--Wl},-rpath='\$\$ORIGIN/../lib'" \
 		"PROFILE_TASK=${PROFILE_TASK:-}" \
@@ -88,17 +88,38 @@ RUN set -eux; \
 	ldconfig; \
 	\
 	export PYTHONDONTWRITEBYTECODE=1; \
-	python3 --version; \
-	pip3 --version
+	python3 --version
 
 # make some useful symlinks that are expected to exist ("/usr/local/bin/python" and friends)
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN set -eux; \
-	for src in idle3 pip3 pydoc3 python3 python3-config; do \
+	for src in idle3 pydoc3 python3 python3-config; do \
 		dst="$(echo "$src" | tr -d 3)"; \
 		[ -s "/usr/local/bin/$src" ]; \
 		[ ! -e "/usr/local/bin/$dst" ]; \
 		ln -svT "$src" "/usr/local/bin/$dst"; \
 	done
+
+# if this is called "PIP_VERSION", pip explodes with "ValueError: invalid truth value '<VERSION>'"
+ENV PYTHON_PIP_VERSION=24.2
+# https://github.com/pypa/get-pip
+ENV PYTHON_GET_PIP_URL=https://raw.githubusercontent.com/pypa/get-pip/HEAD/public/get-pip.py
+
+RUN set -eux; \
+	\
+	wget -q -O get-pip.py "$PYTHON_GET_PIP_URL"; \
+	\
+	export PYTHONDONTWRITEBYTECODE=1; \
+	\
+	python get-pip.py \
+		--disable-pip-version-check \
+		--no-compile \
+		"pip==$PYTHON_PIP_VERSION" \
+		--no-setuptools \
+		--no-wheel \
+	; \
+	rm -f get-pip.py; \
+	\
+	pip --version
 
 CMD ["python3"]
