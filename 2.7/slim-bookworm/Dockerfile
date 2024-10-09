@@ -27,7 +27,7 @@ RUN set -eux; \
     \
     apt-get update --quiet; \
     apt-get upgrade --yes; \
-	apt-get install --yes --no-install-recommends \
+	apt-get install -y --no-install-recommends \
 		ca-certificates \
 		netbase \
 		tzdata \
@@ -42,7 +42,7 @@ RUN set -eux; \
 	\
 	savedAptMark="$(apt-mark showmanual)"; \
 	apt-get update --quiet; \
-	apt-get install --yes --no-install-recommends \
+	apt-get install -y --no-install-recommends \
 		dpkg-dev \
 		gcc \
 		gnupg \
@@ -76,7 +76,7 @@ RUN set -eux; \
 		--enable-shared \
         --enable-unicode=ucs4 \
 	; \
-    make -s -j "$(nproc)" \
+    make -j "$(nproc)" \
 # setting PROFILE_TASK makes "--enable-optimizations" reasonable: https://bugs.python.org/issue36044 / https://github.com/docker-library/python/issues/160#issuecomment-509426916
         PROFILE_TASK='-m test.regrtest --pgo \
             test_array \
@@ -127,7 +127,7 @@ RUN set -eux; \
 		| sort -u \
 		| xargs -r apt-mark manual \
 	; \
-	apt-get purge --yes --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
+	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
 	rm -rf /var/lib/apt/lists/*; \
 	\
 	cd /; \
@@ -150,14 +150,14 @@ RUN set -ex; \
 	\
 	savedAptMark="$(apt-mark showmanual)"; \
 	apt-get update --quiet; \
-	apt-get install --yes --no-install-recommends wget; \
+	apt-get install -y --no-install-recommends wget; \
 	\
 	wget -q -O get-pip.py "$PYTHON_GET_PIP_URL"; \
 	echo "$PYTHON_GET_PIP_SHA256 *get-pip.py" | sha256sum --check --strict -; \
 	\
 	apt-mark auto '.*' > /dev/null; \
 	[ -z "$savedAptMark" ] || apt-mark manual $savedAptMark; \
-	apt-get purge --yes --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
+	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
 	rm -rf /var/lib/apt/lists/*; \
 	\
 	python get-pip.py \
