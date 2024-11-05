@@ -18,6 +18,7 @@ ENV PATH=/usr/local/bin:$PATH
 # last attempted removal of LANG broke many users:
 # https://github.com/docker-library/python/pull/570
 ENV LANG=C.UTF-8
+
 # https://github.com/docker-library/python/issues/147
 ENV PYTHONIOENCODING=UTF-8
 

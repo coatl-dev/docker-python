@@ -17,6 +17,7 @@ ENV PATH=/usr/local/bin:$PATH
 # runtime dependencies
 RUN set -eux; \
 	apt-get update; \
+	apt-get upgrade --yes; \
 	apt-get install -y --no-install-recommends \
 		ca-certificates \
 		netbase \

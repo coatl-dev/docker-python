@@ -22,6 +22,7 @@ ENV LANG=C.UTF-8
 # runtime dependencies
 RUN set -eux; \
 	apt-get update; \
+    apt-get upgrade --yes; \
 	apt-get install -y --no-install-recommends \
 		ca-certificates \
 		netbase \
