@@ -3,7 +3,7 @@ name: auto-update
 on:
   schedule:
     - cron: '0 0 14,28 * *'
-    - cron: '0 0 10 2-12/2 *'
+    - cron: '0 18 10 2-12/2 *'
   workflow_dispatch:
 
 jobs:
