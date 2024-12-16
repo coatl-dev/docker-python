@@ -1,5 +1,3 @@
-name: auto-update
-
 on:
   schedule:
     - cron: '0 0 14,28 * *'
@@ -7,7 +5,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  auto-update:
+  autoupdate:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
