@@ -34,7 +34,7 @@ on:
 
 jobs:
   publish:
-    uses: coatl-dev/workflows/.github/workflows/docker-build-push-multi-platform.yml@v4
+    uses: ./.github/workflows/docker-build-push-multi-platform.yml
     with:
       registry-image: ${{ inputs.image }}
       metadata-tags: |
