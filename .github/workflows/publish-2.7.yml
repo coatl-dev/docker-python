@@ -5,10 +5,11 @@ on:
     branches:
       - 'coatl'
     paths:
+      - '.github/workflows/publish.yml'
       - '.github/workflows/publish-2.7.yml'
       - '2.7/**'
   schedule:
-    - cron: '0 8 28 * *'
+    - cron: '0 8 * * 2,6'
 
 jobs:
   publish:
