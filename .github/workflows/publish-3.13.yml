@@ -9,7 +9,7 @@ on:
       - '.github/workflows/publish-3.13.yml'
       - '3.13/**'
   schedule:
-      - cron: '0 20 * * 0,4'
+      - cron: '0 8 * * 0,4'
 
 jobs:
   tagger:
