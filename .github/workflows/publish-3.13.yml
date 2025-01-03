@@ -5,6 +5,7 @@ on:
     branches:
       - 'coatl'
     paths:
+      - '.github/workflows/publish.yml'
       - '.github/workflows/publish-3.13.yml'
       - '3.13/**'
   schedule:
