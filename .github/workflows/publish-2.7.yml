@@ -10,7 +10,7 @@ on:
       - '2.7/**'
   schedule:
     - cron: '0 9 * * 2,6'
-    - cron: '30 6 1 * *'
+    - cron: '30 6 2 * *'
 
 jobs:
   publish:
@@ -33,7 +33,7 @@ jobs:
     with:
       image: coatldev/python
       version: ${{ matrix.image.version }}
-      build-cache: ${{ github.event.schedule == '30 6 1 * *' && 'false' || 'true' }}
+      build-cache: ${{ github.event.schedule == '0 7 1 * *' && 'false' || 'true' }}
       variant: ${{ matrix.image.variant }}
       tags: ${{ matrix.image.tags }}
       username: ${{ vars.DOCKERHUB_USERNAME }}

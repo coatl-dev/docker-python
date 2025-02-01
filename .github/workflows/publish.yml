@@ -41,16 +41,100 @@ on:
         required: true
 
 jobs:
-  publish:
-    uses: coatl-dev/workflows/.github/workflows/docker-build-push-multi-platform.yml@v4
-    with:
-      registry-image: ${{ inputs.image }}
-      metadata-tags: |
-        ${{ inputs.tags }}
-      registry-username: ${{ inputs.username }}
-      build-file: ${{ inputs.version }}/${{ inputs.variant }}/Dockerfile
-      build-cache-key: ${{ inputs.version }}-${{ inputs.variant }}
-      build-cache: ${{ fromJson(inputs.build-cache) }}
-      build-digest-key: ${{ inputs.version }}-${{ inputs.variant }}
-    secrets:
-      registry-password: ${{ secrets.password }}
+  build:
+    runs-on: ${{ matrix.builder.runner-image }}
+    strategy:
+      fail-fast: false
+      matrix:
+        builder:
+          - runner-image: ubuntu-24.04
+            platform: linux/amd64
+          - runner-image: blacksmith-arm
+            platform: linux/arm64
+    steps:
+      - name: Prepare
+        run: |
+          platform=${{ matrix.builder.platform }}
+          echo "PLATFORM_PAIR=${platform//\//-}" >> $GITHUB_ENV
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ${{ inputs.image }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Docker registry
+        uses: docker/login-action@v3
+        with:
+          username: ${{ inputs.username }}
+          password: ${{ secrets.password }}
+
+      - name: Build and push by digest
+        id: build
+        uses: docker/build-push-action@v6
+        with:
+          cache-from: type=gha,scope=${{ inputs.version }}-${{ inputs.variant }}-${{ env.PLATFORM_PAIR }}
+          cache-to: type=gha,scope=${{ inputs.version }}-${{ inputs.variant }}-${{ env.PLATFORM_PAIR }},mode=max
+          file: ${{ inputs.version }}/${{ inputs.variant }}/Dockerfile
+          labels: ${{ steps.meta.outputs.labels }}
+          no-cache: ${{ ! inputs.build-cache }}
+          outputs: type=image,name=${{ inputs.image }},push-by-digest=true,name-canonical=true,push=true
+          platforms: ${{ matrix.builder.platform }}
+
+      - name: Export digest
+        run: |
+          mkdir -p ${{ runner.temp }}/digests
+          digest="${{ steps.build.outputs.digest }}"
+          touch "${{ runner.temp }}/digests/${digest#sha256:}"
+
+      - name: Upload digest
+        uses: actions/upload-artifact@v4
+        with:
+          name: digests-${{ inputs.version }}-${{ inputs.variant }}-${{ env.PLATFORM_PAIR }}
+          path: ${{ runner.temp }}/digests/*
+          if-no-files-found: error
+          retention-days: 1
+
+  merge:
+    runs-on: ubuntu-latest
+    needs:
+      - build
+    steps:
+      - name: Download digests
+        uses: actions/download-artifact@v4
+        with:
+          path: ${{ runner.temp }}/digests
+          pattern: digests-${{ inputs.version }}-${{ inputs.variant }}-*
+          merge-multiple: true
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ${{ inputs.image }}
+          tags: |
+            ${{ inputs.tags }}
+
+      - name: Login to Docker registry
+        uses: docker/login-action@v3
+        with:
+          username: ${{ inputs.username }}
+          password: ${{ secrets.password }}
+
+      - name: Create manifest list and push
+        working-directory: ${{ runner.temp }}/digests
+        run: |
+          docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
+            $(printf '${{ inputs.image }}@sha256:%s ' *)
+
+      - name: Inspect image
+        run: |
+          docker buildx imagetools inspect ${{ inputs.image }}:${{ steps.meta.outputs.version }}
