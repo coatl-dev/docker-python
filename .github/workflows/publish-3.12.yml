@@ -9,14 +9,15 @@ on:
       - '.github/workflows/publish-3.12.yml'
       - '3.12/**'
   schedule:
-      - cron: '0 8 * * 1,5'
+    - cron: '0 9 * * 1,5'
+    - cron: '30 6 1 * *'
 
 jobs:
   tagger:
     runs-on: ubuntu-latest
     outputs:
       major: ${{ steps.tags.outputs.major }}
-      major_minor: ${{ steps.tags.outputs.major_minor }}
+      major-minor: ${{ steps.tags.outputs.major-minor }}
       version: ${{ steps.tags.outputs.version }}
 
     steps:
@@ -37,7 +38,7 @@ jobs:
           echo "MAJOR=${MAJOR}"
           # Export the extracted version to GITHUB_OUTPUT
           echo "major=${MAJOR}" >> $GITHUB_OUTPUT
-          echo "major_minor=${MAJOR_MINOR}" >> $GITHUB_OUTPUT
+          echo "major-minor=${MAJOR_MINOR}" >> $GITHUB_OUTPUT
           echo "version=${VERSION}" >> $GITHUB_OUTPUT
 
   publish:
@@ -49,16 +50,17 @@ jobs:
           - version: '3.12'
             variant: bookworm
             tags: |
-              ${{ needs.tagger.outputs.major_minor }}
+              ${{ needs.tagger.outputs.major-minor }}
               ${{ needs.tagger.outputs.version }}
           - version: '3.12'
             variant: slim-bookworm
             tags: |
-              ${{ needs.tagger.outputs.major_minor }}-slim
+              ${{ needs.tagger.outputs.major-minor }}-slim
               ${{ needs.tagger.outputs.version }}-slim
     with:
       image: coatldev/python
       version: ${{ matrix.image.version }}
+      build-cache: ${{ github.event.schedule == '30 6 1 * *' && 'true' || 'false' }}
       variant: ${{ matrix.image.variant }}
       tags: ${{ matrix.image.tags }}
       username: ${{ vars.DOCKERHUB_USERNAME }}
