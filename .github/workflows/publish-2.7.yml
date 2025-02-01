@@ -33,7 +33,7 @@ jobs:
     with:
       image: coatldev/python
       version: ${{ matrix.image.version }}
-      build-cache: ${{ github.event.schedule == '30 6 1 * *' && 'true' || 'false' }}
+      build-cache: ${{ github.event.schedule == '30 6 1 * *' && 'false' || 'true' }}
       variant: ${{ matrix.image.variant }}
       tags: ${{ matrix.image.tags }}
       username: ${{ vars.DOCKERHUB_USERNAME }}
