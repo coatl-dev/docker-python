@@ -143,7 +143,7 @@ RUN set -eux; \
 	python2 --version
 
 # https://github.com/pypa/get-pip
-ENV PYTHON_GET_PIP_URL=https://raw.githubusercontent.com/pypa/get-pip/HEAD/public/2.7/get-pip.py
+ENV PYTHON_GET_PIP_URL=https://raw.githubusercontent.com/pypa/get-pip/831b5dd0bec03caf24aa6d736a28dc2ba80f91cc/2.7/get-pip.py
 ENV PYTHON_GET_PIP_SHA256=40ee07eac6674b8d60fce2bbabc148cf0e2f1408c167683f110fd608b8d6f416
 
 RUN set -ex; \
