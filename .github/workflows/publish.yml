@@ -8,12 +8,6 @@ on:
           Docker image to use as base name for tags.
         required: true
         type: string
-      build-cache:
-        description: >-
-          Use cache when building the image.
-        required: false
-        type: string
-        default: 'true'
       version:
         description: >-
           Python version to release.
@@ -73,21 +67,8 @@ jobs:
           username: ${{ inputs.username }}
           password: ${{ secrets.password }}
 
-      - name: Build and push by digest (cached)
-        if: ${{ inputs.build-cache == 'true' }}
-        id: build-cache
-        uses: docker/build-push-action@v6
-        with:
-          cache-from: type=gha,scope=${{ inputs.version }}-${{ inputs.variant }}-${{ env.PLATFORM_PAIR }}
-          cache-to: type=gha,scope=${{ inputs.version }}-${{ inputs.variant }}-${{ env.PLATFORM_PAIR }},mode=max
-          file: ${{ inputs.version }}/${{ inputs.variant }}/Dockerfile
-          labels: ${{ steps.meta.outputs.labels }}
-          outputs: type=image,name=${{ inputs.image }},push-by-digest=true,name-canonical=true,push=true
-          platforms: ${{ matrix.builder.platform }}
-
-      - name: Build and push by digest (no cache)
-        if: ${{ inputs.build-cache != 'true' }}
-        id: build-no-cache
+      - name: Build and push by digest
+        id: build
         uses: docker/build-push-action@v6
         with:
           file: ${{ inputs.version }}/${{ inputs.variant }}/Dockerfile
@@ -96,18 +77,10 @@ jobs:
           outputs: type=image,name=${{ inputs.image }},push-by-digest=true,name-canonical=true,push=true
           platforms: ${{ matrix.builder.platform }}
 
-      - name: Export digest (cached)
-        if: ${{ inputs.build-cache == 'true' }}
+      - name: Export digest
         run: |
           mkdir -p ${{ runner.temp }}/digests
-          digest="${{ steps.build-cache.outputs.digest }}"
-          touch "${{ runner.temp }}/digests/${digest#sha256:}"
-
-      - name: Export digest (no cache)
-        if: ${{ inputs.build-cache == 'false' }}
-        run: |
-          mkdir -p ${{ runner.temp }}/digests
-          digest="${{ steps.build-no-cache.outputs.digest }}"
+          digest="${{ steps.build.outputs.digest }}"
           touch "${{ runner.temp }}/digests/${digest#sha256:}"
 
       - name: Upload digest

@@ -9,8 +9,7 @@ on:
       - '.github/workflows/publish-3.12.yml'
       - '3.12/**'
   schedule:
-    - cron: '0 9 * * 1,5'
-    - cron: '45 7 1 * *'
+    - cron: '0 8 15 * *'
 
 jobs:
   tagger:
@@ -60,7 +59,6 @@ jobs:
     with:
       image: coatldev/python
       version: ${{ matrix.image.version }}
-      build-cache: ${{ github.event.schedule == '45 7 1 * *' && 'false' || 'true' }}
       variant: ${{ matrix.image.variant }}
       tags: ${{ matrix.image.tags }}
       username: ${{ vars.DOCKERHUB_USERNAME }}

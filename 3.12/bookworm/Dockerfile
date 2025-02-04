@@ -8,7 +8,6 @@ LABEL \
 ENV DEBIAN_FRONTEND=noninteractive
 
 ENV PIP_NO_CACHE_DIR=1
-ENV PIP_NO_PYTHON_VERSION_WARNING=1
 ENV PIP_ROOT_USER_ACTION=ignore
 
 # ensure local python is preferred over distribution python
