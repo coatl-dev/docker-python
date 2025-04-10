@@ -41,7 +41,7 @@ jobs:
       fail-fast: false
       matrix:
         builder:
-          - runner-image: ubuntu-24.04
+          - runner-image: blacksmith
             platform: linux/amd64
           - runner-image: blacksmith-arm
             platform: linux/arm64
