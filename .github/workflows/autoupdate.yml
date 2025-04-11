@@ -8,7 +8,7 @@ on:
 
 jobs:
   autoupdate:
-    runs-on: ubuntu-latest
+    runs-on: blacksmith
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4

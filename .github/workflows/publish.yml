@@ -92,7 +92,7 @@ jobs:
           retention-days: 1
 
   merge:
-    runs-on: ubuntu-latest
+    runs-on: blacksmith
     needs:
       - build
     steps:
