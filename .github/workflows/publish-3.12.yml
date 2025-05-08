@@ -3,11 +3,11 @@ name: publish-3.12
 on:
   push:
     branches:
-      - 'coatl'
+      - coatl
     paths:
-      - '.github/workflows/publish.yml'
-      - '.github/workflows/publish-3.12.yml'
-      - '3.12/**'
+      - .github/workflows/publish.yml
+      - .github/workflows/publish-3.12.yml
+      - 3.12/**
   schedule:
     - cron: '0 8 15 * *'
 
