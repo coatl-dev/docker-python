@@ -36,13 +36,13 @@ jobs:
           sed -i "s/3\.13\.[0-9]\+\([-a-z]*\)/$python_version\1/g" README.md
 
       - name: Update requirements
-        uses: coatl-dev/actions/pip-compile@v4
+        uses: coatl-dev/actions/pip-compile-upgrade@v4
         with:
           path: requirements/3.12
           python-version: '3.12'
 
       - name: Update requirements
-        uses: coatl-dev/actions/pip-compile@v4
+        uses: coatl-dev/actions/pip-compile-upgrade@v4
         with:
           path: requirements/3.13
           python-version: '3.13'
