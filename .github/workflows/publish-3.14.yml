@@ -1,4 +1,4 @@
-name: publish-3.13
+name: publish-3.14
 
 on:
   push:
@@ -6,14 +6,14 @@ on:
       - coatl
     paths:
       - .github/workflows/publish.yml
-      - .github/workflows/publish-3.13.yml
-      - 3.13/**
+      - .github/workflows/publish-3.14.yml
+      - 3.14/**
   schedule:
-    - cron: '0 8 16 * *'
+    - cron: '0 8 17 * *'
 
 jobs:
   tagger:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     outputs:
       major: ${{ steps.tags.outputs.major }}
       major-minor: ${{ steps.tags.outputs.major-minor }}
@@ -27,7 +27,7 @@ jobs:
         id: tags
         run: |
           # Extract the Python version from the Dockerfile
-          VERSION=$(grep 'ENV PYTHON_VERSION' 3.13/bookworm/Dockerfile | cut -d '=' -f 2)
+          VERSION=$(grep 'ENV PYTHON_VERSION' 3.14/bookworm/Dockerfile | cut -d '=' -f 2)
           echo "VERSION=${VERSION}"
           # Trim the version to the first two segments (major.minor)
           MAJOR_MINOR=$(echo $VERSION | cut -d'.' -f1-2)
@@ -46,14 +46,16 @@ jobs:
     strategy:
       matrix:
         image:
-          - version: '3.13'
+          - version: '3.14'
             variant: bookworm
             tags: |
+              ${{ needs.tagger.outputs.major }}
               ${{ needs.tagger.outputs.major-minor }}
               ${{ needs.tagger.outputs.version }}
-          - version: '3.13'
+          - version: '3.14'
             variant: slim-bookworm
             tags: |
+              ${{ needs.tagger.outputs.major }}-slim
               ${{ needs.tagger.outputs.major-minor }}-slim
               ${{ needs.tagger.outputs.version }}-slim
     with:

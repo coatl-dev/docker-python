@@ -35,31 +35,51 @@ jobs:
           sed -i "s/ENV PYTHON_VERSION=.*/ENV PYTHON_VERSION=$python_version/" 3.13/slim-bookworm/Dockerfile
           sed -i "s/3\.13\.[0-9]\+\([-a-z]*\)/$python_version\1/g" README.md
 
-      - name: Update requirements
+      - name: Fetch latest Python 3.14 release
+        if: ${{ github.event.schedule == '0 18 10 2-12/2 *' || github.event_name == 'workflow_dispatch' }}
+        run: |
+          python_version=$(curl -s https://www.python.org/ftp/python/ | grep -oP '3\.14\.\d+/' | uniq | sort -V | tail -n 1 | tr -d '/')
+
+          echo "python3.14: $python_version"
+
+          sed -i "s/ENV PYTHON_VERSION=.*/ENV PYTHON_VERSION=$python_version/" 3.14/bookworm/Dockerfile
+          sed -i "s/ENV PYTHON_VERSION=.*/ENV PYTHON_VERSION=$python_version/" 3.14/slim-bookworm/Dockerfile
+          sed -i "s/3\.14\.[0-9]\+\([-a-z]*\)/$python_version\1/g" README.md
+
+      - name: Update 3.12 requirements
         uses: coatl-dev/actions/uv-pip-compile-upgrade@v5
         with:
           path: requirements/3.12
           python-version: '3.12'
 
-      - name: Update requirements
+      - name: Update 3.13 requirements
         uses: coatl-dev/actions/uv-pip-compile-upgrade@v5
         with:
           path: requirements/3.13
           python-version: '3.13'
 
+      - name: Update 3.14 requirements
+        uses: coatl-dev/actions/uv-pip-compile-upgrade@v5
+        with:
+          path: requirements/3.14
+          python-version: '3.14'
+
       - name: Extract package versions and update Dockerfile
         run: |
           pip312=$(grep '^pip==' requirements/3.12/pip.txt | cut -d'=' -f3)
           pip313=$(grep '^pip==' requirements/3.13/pip.txt | cut -d'=' -f3)
+          pip314=$(grep '^pip==' requirements/3.14/pip.txt | cut -d'=' -f3)
 
           echo "Extracted versions:"
           echo "pip3.12: $pip312"
-          echo "pip3.13: $pip313"
-
           sed -i "s/ENV PYTHON_PIP_VERSION=.*/ENV PYTHON_PIP_VERSION=$pip312/" 3.12/bookworm/Dockerfile
           sed -i "s/ENV PYTHON_PIP_VERSION=.*/ENV PYTHON_PIP_VERSION=$pip312/" 3.12/slim-bookworm/Dockerfile
+          echo "pip3.13: $pip313"
           sed -i "s/ENV PYTHON_PIP_VERSION=.*/ENV PYTHON_PIP_VERSION=$pip313/" 3.13/bookworm/Dockerfile
           sed -i "s/ENV PYTHON_PIP_VERSION=.*/ENV PYTHON_PIP_VERSION=$pip313/" 3.13/slim-bookworm/Dockerfile
+          echo "pip3.14: $pip314"
+          sed -i "s/ENV PYTHON_PIP_VERSION=.*/ENV PYTHON_PIP_VERSION=$pip314/" 3.14/bookworm/Dockerfile
+          sed -i "s/ENV PYTHON_PIP_VERSION=.*/ENV PYTHON_PIP_VERSION=$pip314/" 3.14/slim-bookworm/Dockerfile
 
       - name: Detect changes
         id: git-diff
