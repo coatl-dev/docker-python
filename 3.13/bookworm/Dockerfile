@@ -24,7 +24,7 @@ RUN set -eux; \
 	; \
 	rm -rf /var/lib/apt/lists/*
 
-ENV PYTHON_VERSION=3.13.6
+ENV PYTHON_VERSION=3.13.8
 
 RUN set -eux; \
 	\
