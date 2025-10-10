@@ -29,7 +29,7 @@ RUN set -eux; \
 	; \
 	rm -rf /var/lib/apt/lists/*
 
-ENV PYTHON_VERSION=3.12.11
+ENV PYTHON_VERSION=3.12.12
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN set -eux; \
