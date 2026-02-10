@@ -24,7 +24,7 @@ RUN set -eux; \
 	; \
 	rm -rf /var/lib/apt/lists/*
 
-ENV PYTHON_VERSION=3.13.11
+ENV PYTHON_VERSION=3.13.12
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN set -eux; \
@@ -130,7 +130,7 @@ RUN set -eux; \
 	done
 
 # if this is called "PIP_VERSION", pip explodes with "ValueError: invalid truth value '<VERSION>'"
-ENV PYTHON_PIP_VERSION=25.3
+ENV PYTHON_PIP_VERSION=26.0.1
 # https://github.com/pypa/get-pip
 ENV PYTHON_GET_PIP_URL=https://raw.githubusercontent.com/pypa/get-pip/HEAD/public/get-pip.py
 
