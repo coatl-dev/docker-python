@@ -29,7 +29,7 @@ RUN set -eux; \
 	; \
 	rm -rf /var/lib/apt/lists/*
 
-ENV PYTHON_VERSION=3.12.12
+ENV PYTHON_VERSION=3.12.13
 
 RUN set -eux; \
 	\
