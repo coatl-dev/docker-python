@@ -5,12 +5,12 @@
 
 ## Supported tags and respective `Dockerfile` links
 
-- [`3`, `3.14`, `3.14.3`]
-- [`3-slim`, `3.14-slim`, `3.14.3-slim`]
-- [`3.13`, `3.13.12`]
-- [`3.13-slim`, `3.13.12-slim`]
-- [`3.12`, `3.12.12`]
-- [`3.12-slim`, `3.12.12-slim`]
+- [`3`, `3.14`, `3.14.4`]
+- [`3-slim`, `3.14-slim`, `3.14.4-slim`]
+- [`3.13`, `3.13.13`]
+- [`3.13-slim`, `3.13.13-slim`]
+- [`3.12`, `3.12.13`]
+- [`3.12-slim`, `3.12.13-slim`]
 - [`2`, `2.7`, `2.7.18`]
 - [`2-slim`, `2.7-slim`, `2.7.18-slim`]
 
@@ -125,9 +125,9 @@ compile extension modules written in other languages. Possible solutions if a
 <!-- Links -->
 [`2`, `2.7`, `2.7.18`]: https://github.com/coatl-dev/docker-python/blob/coatl/2.7/bookworm/Dockerfile
 [`2-slim`, `2.7-slim`, `2.7.18-slim`]: https://github.com/coatl-dev/docker-python/blob/coatl/2.7/slim-bookworm/Dockerfile
-[`3.12`, `3.12.12`]: https://github.com/coatl-dev/docker-python/blob/coatl/3.12/bookworm/Dockerfile
-[`3.12-slim`, `3.12.12-slim`]: https://github.com/coatl-dev/docker-python/blob/coatl/3.12/slim-bookworm/Dockerfile
-[`3.13`, `3.13.12`]: https://github.com/coatl-dev/docker-python/blob/coatl/3.13/bookworm/Dockerfile
-[`3.13-slim`, `3.13.12-slim`]: https://github.com/coatl-dev/docker-python/blob/coatl/3.13/slim-bookworm/Dockerfile
-[`3`, `3.14`, `3.14.3`]: https://github.com/coatl-dev/docker-python/blob/coatl/3.13/bookworm/Dockerfile
-[`3-slim`, `3.14-slim`, `3.14.3-slim`]: https://github.com/coatl-dev/docker-python/blob/coatl/3.13/slim-bookworm/Dockerfile
+[`3.12`, `3.12.13`]: https://github.com/coatl-dev/docker-python/blob/coatl/3.12/bookworm/Dockerfile
+[`3.12-slim`, `3.12.13-slim`]: https://github.com/coatl-dev/docker-python/blob/coatl/3.12/slim-bookworm/Dockerfile
+[`3.13`, `3.13.13`]: https://github.com/coatl-dev/docker-python/blob/coatl/3.13/bookworm/Dockerfile
+[`3.13-slim`, `3.13.13-slim`]: https://github.com/coatl-dev/docker-python/blob/coatl/3.13/slim-bookworm/Dockerfile
+[`3`, `3.14`, `3.14.4`]: https://github.com/coatl-dev/docker-python/blob/coatl/3.13/bookworm/Dockerfile
+[`3-slim`, `3.14-slim`, `3.14.4-slim`]: https://github.com/coatl-dev/docker-python/blob/coatl/3.13/slim-bookworm/Dockerfile
