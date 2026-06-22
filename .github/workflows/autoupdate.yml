@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Fetch latest Python 3.12 release
         if: ${{ github.event.schedule == '0 18 10 2-12/2 *' || github.event_name == 'workflow_dispatch' }}
