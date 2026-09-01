@@ -11,7 +11,7 @@ on:
 
 jobs:
   publish:
-    uses: ./.github/workflows/publish.yml
+    uses: $/.github/workflows/publish.yml
     strategy:
       matrix:
         image:
